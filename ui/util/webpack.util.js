@@ -195,7 +195,22 @@ function getAppConfig(mode, isDevServer, dirname, managerUrl, keycloakUrl, port)
         open: false,
         hot: false, // HMR doesn't work with webcomponents at present
         liveReload: true,
-        static: OUTPUT_PATH
+        static: [
+            {
+                directory: path.join(dirname, OUTPUT_PATH),
+                publicPath: "/" + dirname.split(path.sep).slice(-1)[0] + "/"
+            }
+        ],
+        setupMiddlewares: (middlewares, devServer) => {
+            // Add custom middleware to serve static files
+            const express = require('express');
+            const staticMiddleware = express.static(path.join(dirname, OUTPUT_PATH));
+            middlewares.push({
+                name: 'static-files',
+                middleware: staticMiddleware
+            });
+            return middlewares;
+        }
     };
     config.watchOptions = {
         ignored: ['node_modules']

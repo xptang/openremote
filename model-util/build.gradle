@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id "maven-publish"
     id "signing"
-    id 'cz.habarta.typescript-generator'
 }
 
 repositories {
